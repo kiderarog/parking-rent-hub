@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: Parking Rent Hub
+  config:
+    import: "classpath:database.properties"
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/client
+
+
+  mail:
+    host: smtp.yandex.ru
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.ssl.trust: smtp.yandex.ru
+    protocol: smtp
+
+
+jwt:
+  secret-key: "bm1aqA3a+cbFbK2eyGZLhQtd9svGAuEgJKmuaeQOJiSG33Mf/Wysvem8uQCk/o84g7aeBkggz7UxoeDXcl+NSA=="

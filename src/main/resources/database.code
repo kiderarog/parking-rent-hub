@@ -1,0 +1,7 @@
+OTP
+create table otp (
+	username varchar,
+	otp_code int,
+	issued_at timestamp,
+	exp_at timestamp
+)
