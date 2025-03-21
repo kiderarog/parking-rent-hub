@@ -6,8 +6,9 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL) // Исключаем поля с null
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseDTO {
+
     private String status;
     private String message;
     private List<String> errors;

@@ -57,7 +57,6 @@ public class AuthService {
             }
         }
         return new ResponseDTO("error", "Неверные имя пользователя или пароль.");
-
     }
 
 

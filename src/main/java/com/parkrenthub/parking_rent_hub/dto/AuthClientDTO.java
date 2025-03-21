@@ -42,4 +42,9 @@ public class AuthClientDTO {
     @Pattern(regexp = "^\\+7\\d{10}$", message = "Введите номер телефона в формате +7XXXXXXXXXX")
     @Indexed(unique = true)
     private String phone;
+
+    @NotEmpty(message = "Укажите госномер авто.")
+    @Pattern(regexp = "^[A-Z]\\d{3}[A-Z]{2}\\d{3}$|^[A-Z]\\d{3}[A-Z]{2}\\d{2}$\n",
+            message = "Введите номер автомобиле в формате X000XX000 или X000XX00")
+    private String carNumber;
 }

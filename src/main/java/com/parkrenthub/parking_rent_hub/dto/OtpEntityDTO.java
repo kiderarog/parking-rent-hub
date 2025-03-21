@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Data
 public class OtpEntityDTO {
+
     @NotNull
     @Digits(integer = 6, fraction = 0)
     private Integer otpCode;
