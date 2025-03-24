@@ -1,7 +1,33 @@
 OTP
-create table otp (
-	username varchar,
-	otp_code int,
-	issued_at timestamp,
-	exp_at timestamp
-)
+CREATE TABLE otp (
+	username VARCHAR,
+	otp_code INT,
+	issued_at TIMESTAMP,
+	exp_at TIMESTAMP
+);
+
+
+
+CREATE EXTENSION IF NOT EXISTS "pgcrypto"; -- Расширение для генерации UUID
+
+CREATE TABLE parking (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(), -- Уникальный идентификатор парковки
+    name VARCHAR(255) NOT NULL,                   -- Название парковки
+    location VARCHAR(255) NOT NULL,               -- Локация парковки
+    total_spots INT NOT NULL,                     -- Общее количество мест
+    available_spots INT NOT NULL,                 -- Доступные места
+    daily_price INT NOT NULL,                     -- Стоимость места в день
+    monthly_price INT NOT NULL                    -- Стоимость места в месяц
+);
+
+CREATE TABLE spot (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(), -- Уникальный идентификатор места
+    parking_id UUID NOT NULL REFERENCES parking(id) ON DELETE CASCADE, -- Ссылка на парковку
+    user_id UUID UNIQUE,                         -- ID пользователя из JWT токена
+    start_date TIMESTAMP,                -- Дата начала бронирования
+    end_date TIMESTAMP,                  -- Дата окончания бронирования
+    car_number VARCHAR(20),              -- Госномер авто
+    CONSTRAINT check_dates CHECK (end_date > start_date) -- Проверка, чтобы дата окончания была позже начала
+);
+
+

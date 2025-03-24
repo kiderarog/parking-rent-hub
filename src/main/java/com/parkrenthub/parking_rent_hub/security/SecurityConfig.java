@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     private final ClientDetailsService clientDetailsService;
     private final JWTFilter jwtFilter;
@@ -58,6 +60,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/auth/**", "/auth/reset-password").permitAll()
                         .requestMatchers("/change-password").authenticated()  // Требуем авторизацию для /protected-endpoint
+                        .requestMatchers(("/admin/**")).hasRole("ADMIN")
                         .anyRequest().authenticated())  // Для всех остальных запросов — требовать авторизацию
                 .httpBasic(Customizer.withDefaults())  // Стандартная авторизация HTTP
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // Без сессий

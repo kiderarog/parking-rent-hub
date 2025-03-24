@@ -43,6 +43,7 @@ public class AuthService {
         Client client = modelMapper.map(authClientDTO, Client.class);
         client.setPassword(passwordEncoder.encode(client.getPassword()));
         client.setRole(Roles.ROLE_USER);
+        client.setBalance(0.0);
         clientRepository.save(client);
     }
 

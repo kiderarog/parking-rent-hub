@@ -1,6 +1,5 @@
 package com.parkrenthub.parking_rent_hub.exception;
 
-import com.parkrenthub.parking_rent_hub.dto.ResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,8 +12,8 @@ import org.springframework.dao.DuplicateKeyException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateKeyException.class)
-    private ResponseEntity<ClientErrorResponse> handleDuplicateKeyException(DuplicateKeyException e) {
-        ClientErrorResponse response = new ClientErrorResponse(
+    private ResponseEntity<ErrorResponse> handleDuplicateKeyException(DuplicateKeyException e) {
+        ErrorResponse response = new ErrorResponse(
                 "Клиент с таким username, email или номером телефона уже существует!",
                 System.currentTimeMillis()
         );
@@ -23,8 +22,8 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler
-    private ResponseEntity<ClientErrorResponse> handleOtpValidationException(OtpValidationException e) {
-        ClientErrorResponse response = new ClientErrorResponse(
+    private ResponseEntity<ErrorResponse> handleOtpValidationException(OtpValidationException e) {
+        ErrorResponse response = new ErrorResponse(
                 "Введены неверные данные для сброса пароля.",
                 System.currentTimeMillis()
         );
@@ -32,9 +31,34 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<ResponseDTO> handleUserNotFound(UsernameNotFoundException e) {
-        return ResponseEntity.status(404).body(new ResponseDTO
-                ("error", "Пользователь не найден."));
+    public ResponseEntity<ErrorResponse> handleUserNotFound(UsernameNotFoundException e) {
+        ErrorResponse response = new ErrorResponse(
+                "Пользователь не найден.",
+                System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+
     }
+
+    @ExceptionHandler(PaymentErrorException.class)
+    public ResponseEntity<ErrorResponse> handlePaymentErrorException(PaymentErrorException e) {
+        ErrorResponse response = new ErrorResponse(
+                "Ошибка платежного сервиса",
+                System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+
+    }
+
+    @ExceptionHandler(ErrorCreatingParkingException.class)
+    public ResponseEntity<ErrorResponse> handleErrorCreatingParkingException(ErrorCreatingParkingException e) {
+        ErrorResponse response = new ErrorResponse(
+                "При создании парковки произошла ошибка.",
+                System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+
 
 }

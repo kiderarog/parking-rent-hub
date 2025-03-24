@@ -37,7 +37,8 @@ public class ClientService {
                     client.getSurname(),
                     client.getEmail(),
                     client.getPhone(),
-                    client.getCarNumber()
+                    client.getCarNumber(),
+                    client.getBalance()
             );
         }
         throw new UsernameNotFoundException("Пользователь не найден.");

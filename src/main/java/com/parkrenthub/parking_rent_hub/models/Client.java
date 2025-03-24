@@ -62,4 +62,6 @@ public class Client {
             message = "Введите номер автомобиле в формате X000XX000 или X000XX00")
     private String carNumber;
 
+    private Double balance;
+
 }
