@@ -1,8 +1,6 @@
 package com.parkrenthub.parking_rent_hub.controllers;
 
-import com.parkrenthub.parking_rent_hub.dto.CreateParkingDTO;
-import com.parkrenthub.parking_rent_hub.dto.PriceChangingDTO;
-import com.parkrenthub.parking_rent_hub.dto.ResponseDTO;
+import com.parkrenthub.parking_rent_hub.dto.*;
 import com.parkrenthub.parking_rent_hub.services.AdminService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,19 +48,25 @@ public class AdminController {
                                                      @RequestParam("freeze") boolean freeze) {
         ResponseDTO response = adminService.freezeParking(parkingId, freeze);
         if (response.getStatus().equals("error")) {
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // Изменение ценовой политики парковки.
     @PostMapping("/change-price/{parkingId}")
-    public ResponseEntity<ResponseDTO> changePrice(@PathVariable("parkingId") UUID parkingId, PriceChangingDTO priceChangingDTO) {
+    public ResponseEntity<ResponseDTO> changePrice(@PathVariable("parkingId") UUID parkingId, @RequestBody PriceChangingDTO priceChangingDTO) {
         ResponseDTO response = adminService.changePrice(parkingId, priceChangingDTO);
         if (response.getStatus().equals("error")) {
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // Получение статистики по конкретной парковке.
+    @GetMapping("/stats/{parkingId}")
+    public ResponseEntity<ParkingStatsDTO> getStats(@PathVariable("parkingId") UUID parkingId) {
+        return ResponseEntity.ok().body(adminService.getStats(parkingId));
     }
 
 }

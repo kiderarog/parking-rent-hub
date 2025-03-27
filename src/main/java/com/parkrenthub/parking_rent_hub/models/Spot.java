@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CollectionId;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -19,7 +19,7 @@ public class Spot {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    private UUID userId;
+    private UUID clientId;
 
     @Column(name = "start_date")
     private LocalDateTime startBookDate;
@@ -35,5 +35,9 @@ public class Spot {
 
     @ManyToOne
     @JoinColumn(name = "parking_id")
+    @ToString.Exclude
     private Parking parking;
+
+    @Column(name = "car_on_spot_status")
+    private Boolean carOnSpotStatus;
 }

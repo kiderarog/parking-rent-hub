@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.index.Indexed;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -42,5 +44,7 @@ public class ClientDTO {
     private String carNumber;
 
     private Double balance;
+
+    private UUID bookedSpotId;
 
 }

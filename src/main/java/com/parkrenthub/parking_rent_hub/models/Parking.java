@@ -43,7 +43,13 @@ public class Parking {
     @OneToMany(mappedBy = "parking")
     private List<Spot> spots;
 
+    @Column(name = "booked_spots")
+    private Integer bookedSpots;
+
     @Column(name = "is_freeze")
     private boolean isFreeze;
 
+    public boolean isFreeze() {
+        return isFreeze;
+    }
 }

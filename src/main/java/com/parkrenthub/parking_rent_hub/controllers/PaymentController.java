@@ -24,6 +24,7 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
+    // Метод для пополнения баланса (имитирует обработку запроса в сторонней платежной системе).
     @PostMapping("/add-balance")
     public ResponseEntity<ResponseDTO> addBalance(@AuthenticationPrincipal ClientDetails clientDetails,
                                                   @RequestBody @Valid AddBalanceDTO addBalanceDTO,

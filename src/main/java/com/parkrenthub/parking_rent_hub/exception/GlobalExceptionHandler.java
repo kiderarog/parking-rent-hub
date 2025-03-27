@@ -59,6 +59,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ParkingNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleParkingNotFoundException(ParkingNotFoundException e) {
+        ErrorResponse response = new ErrorResponse(
+                "Такой парковки не существует.",
+                System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+
+
 
 
 }

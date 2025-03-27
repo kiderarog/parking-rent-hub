@@ -47,4 +47,9 @@ public class AuthClientDTO {
     @Pattern(regexp = "^[A-Z]\\d{3}[A-Z]{2}\\d{3}$|^[A-Z]\\d{3}[A-Z]{2}\\d{2}$\n",
             message = "Введите номер автомобиле в формате X000XX000 или X000XX00")
     private String carNumber;
+
+    private Double balance;
+
+    private Integer totalPenaltySum;
+
 }

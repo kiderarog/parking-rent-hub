@@ -32,6 +32,8 @@ public class ClientDetails implements UserDetails {
         return client.getUsername();
     }
 
+    public String getClientId() { return String.valueOf(client.getId()); }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -51,4 +53,6 @@ public class ClientDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }

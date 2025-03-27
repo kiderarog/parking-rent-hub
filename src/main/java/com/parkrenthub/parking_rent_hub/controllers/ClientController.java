@@ -63,6 +63,7 @@ public class ClientController {
         return ResponseEntity.ok(clientService.deleteProfile(clientDetails.getUsername()));
     }
 
+    // Метод для изменения пароля (в случае, если актуальный пароль известен).
     @PostMapping("/change-password")
     public ResponseEntity<ResponseDTO> changePassword(@RequestBody @Validated(PasswordChangeGroup.class) AuthClientDTO authClientDTO,
                                                       BindingResult bindingResult) {

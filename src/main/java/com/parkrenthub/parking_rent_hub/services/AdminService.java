@@ -1,9 +1,11 @@
 package com.parkrenthub.parking_rent_hub.services;
 
 import com.parkrenthub.parking_rent_hub.dto.CreateParkingDTO;
+import com.parkrenthub.parking_rent_hub.dto.ParkingStatsDTO;
 import com.parkrenthub.parking_rent_hub.dto.PriceChangingDTO;
 import com.parkrenthub.parking_rent_hub.dto.ResponseDTO;
 import com.parkrenthub.parking_rent_hub.exception.ErrorCreatingParkingException;
+import com.parkrenthub.parking_rent_hub.exception.ParkingNotFoundException;
 import com.parkrenthub.parking_rent_hub.models.Parking;
 import com.parkrenthub.parking_rent_hub.models.Spot;
 import com.parkrenthub.parking_rent_hub.repositories.ParkingRepository;
@@ -40,6 +42,7 @@ public class AdminService {
             parking.setAvailableSpots(createParkingDTO.getAvailableSpots());
             parking.setDailyPrice(createParkingDTO.getDailyPrice());
             parking.setMonthlyPrice(createParkingDTO.getMonthlyPrice());
+            parking.setBookedSpots(0);
             parkingRepository.save(parking);
 
             List<Spot> spots = new ArrayList<>();
@@ -97,6 +100,8 @@ public class AdminService {
     // Возможность установления обновленной ежедневной или месячной цены за использование места.
     @Transactional
     public ResponseDTO changePrice(UUID parkingId, PriceChangingDTO priceChangingDTO) {
+        System.out.println("Запрос на изменение цены: " + parkingId);
+
         Optional<Parking> optionalParking = parkingRepository.findById(parkingId);
         if (optionalParking.isEmpty()) {
             return new ResponseDTO("error", "Нет такой парковки.");
@@ -113,4 +118,22 @@ public class AdminService {
     }
 
     // Метод для отображения статистики по конкретной парковке.
+    @Transactional(readOnly = true)
+    public ParkingStatsDTO getStats(UUID parkingId) {
+        Optional<Parking> optionalParking = parkingRepository.findById(parkingId);
+        if (optionalParking.isEmpty()) {
+            throw new ParkingNotFoundException();
+        }
+        Parking parking = optionalParking.get();
+        return new ParkingStatsDTO(
+                parking.getName(),
+                parking.getLocation(),
+                parking.getTotalSpots(),
+                parking.getAvailableSpots(),
+                parking.getBookedSpots(),
+                parking.getDailyPrice(),
+                parking.getMonthlyPrice(),
+                parking.isFreeze());
+
+    }
 }

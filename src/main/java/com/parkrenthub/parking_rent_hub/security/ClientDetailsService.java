@@ -26,7 +26,7 @@ public class ClientDetailsService implements UserDetailsService {
         if (clientOptional.isPresent()) {
             return new ClientDetails(clientOptional.get());
         } else {
-            throw new UsernameNotFoundException("User NOT Found");
+            throw new UsernameNotFoundException("Пользователь не найден.");
         }
     }
 }

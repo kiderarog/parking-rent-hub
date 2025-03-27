@@ -10,7 +10,6 @@ import com.parkrenthub.parking_rent_hub.repositories.ClientRepository;
 import com.parkrenthub.parking_rent_hub.security.JWTUtil;
 import com.parkrenthub.parking_rent_hub.security.Roles;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,28 +24,33 @@ public class AuthService {
     private final JWTUtil jwtUtil;
     private final EmailSender emailSender;
     private final OtpService otpService;
+    private final PyrusService pyrusService;
 
-    @Autowired
-    public AuthService(ClientRepository clientRepository, PasswordEncoder passwordEncoder,
-                       ModelMapper modelMapper, JWTUtil jwtUtil, EmailSender emailSender,
-                       OtpService otpService) {
+    public AuthService(ClientRepository clientRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper, JWTUtil jwtUtil, EmailSender emailSender, OtpService otpService, PyrusService pyrusService) {
         this.clientRepository = clientRepository;
         this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
         this.jwtUtil = jwtUtil;
         this.emailSender = emailSender;
         this.otpService = otpService;
+        this.pyrusService = pyrusService;
     }
 
+
+    // Метод для сохранения пользователя при регистрации.
+    // Пользователь сохраняется в БД, а также передается в CRM с помощью методов из PyrusService.
     @Transactional
     public void saveClient(AuthClientDTO authClientDTO) {
         Client client = modelMapper.map(authClientDTO, Client.class);
         client.setPassword(passwordEncoder.encode(client.getPassword()));
         client.setRole(Roles.ROLE_USER);
         client.setBalance(0.0);
+        client.setTotalPenaltySum(0);
         clientRepository.save(client);
+        pyrusService.addClientCRM(client);
     }
 
+    // Метод для получения JWT-токена для авторизации пользователя.
     @Transactional
     public ResponseDTO getAuthorizationToken(AuthClientDTO authClientDTO) {
         Optional<Client> optionalClient =
@@ -54,23 +58,18 @@ public class AuthService {
         if (optionalClient.isPresent()) {
             Client client = optionalClient.get();
             if (passwordEncoder.matches(authClientDTO.getPassword(), client.getPassword())) {
-                return new ResponseDTO("token", jwtUtil.generateToken(client.getUsername(), client.getRole().name()));
+                return new ResponseDTO("token", jwtUtil.generateToken(client.getUsername(), client.getRole().name(), client.getId()));
             }
         }
         return new ResponseDTO("error", "Неверные имя пользователя или пароль.");
     }
 
-
-    @Transactional
-    public Optional<Client> findClientByEmail(String email) {
-        return clientRepository.findByEmail(email);
-    }
-
-
+    // Метод для инициализации процесса сброса пароля через одноразовый код,
+    // Который высылается на почту пользователю и имеет срок действия в 5 минут.
     @Transactional
     public ResponseDTO resetPasswordRequestProcessing(String email) {
         Optional<Client> optionalClient =
-                findClientByEmail(email);
+                clientRepository.findByEmail(email);
         if (optionalClient.isPresent()) {
             Client client = optionalClient.get();
             otpService.addOtp(email);
@@ -80,6 +79,7 @@ public class AuthService {
         return new ResponseDTO("error", "Пользователь с таким Email не найден");
     }
 
+    // Метод для проверки введенного одноразового пароля и смены пароля в случае успешного ввода OTP.
     @Transactional
     public ResponseDTO replaceForgottenPassword(Integer otpCode, String newPassword) {
         Optional<String> optionalEmail = otpService.findClientEmailByOtp(otpCode);
@@ -97,10 +97,6 @@ public class AuthService {
         clientRepository.save(client);
         return new ResponseDTO("success", "Забытый пароль успешно изменен.");
     }
-
-
-    // еще проверка времени типа если время отправки запроса больше чем exp time тогда мы запрещаем
-    // и удаляем из БД otp этот код т.к. он уже истек.
 
 
 }

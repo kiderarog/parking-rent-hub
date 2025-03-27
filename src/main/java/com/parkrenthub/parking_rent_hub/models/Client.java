@@ -64,4 +64,8 @@ public class Client {
 
     private Double balance;
 
+    private UUID bookedSpotId;
+
+    private Integer totalPenaltySum;
+
 }

@@ -35,4 +35,15 @@ jwt:
   secret-key: "bm1aqA3a+cbFbK2eyGZLhQtd9svGAuEgJKmuaeQOJiSG33Mf/Wysvem8uQCk/o84g7aeBkggz7UxoeDXcl+NSA=="
 
 
-hibernate:
+cron:
+  expression: "0 * * * * *"
+
+
+pyrus:
+  auth-url: "https://accounts.pyrus.com/api/v4/auth"
+  add-task-url: "https://api.pyrus.com/v4/tasks"
+  login: "g.valdemarych@yandex.ru"
+  secret-key: "CkBdA1zooQ4jd2-23pnbpG3IqbQhmtx4iBS8VAMK8LvEMHKit54-4BKmHMVNAQU~KIV-85xSRoaNRZKSEIz0jzuVVXmqI4Be"
+
+
+

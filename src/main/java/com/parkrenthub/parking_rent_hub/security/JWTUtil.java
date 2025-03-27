@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 public class JWTUtil {
@@ -25,11 +26,12 @@ public class JWTUtil {
 
 
 
-    public String generateToken(String username, String role) {
+    public String generateToken(String username, String role, UUID id) {
 
         return Jwts.builder()
                 .claim("role", role)
                 .claim("username", username)
+                .claim("id", id.toString())
                 .subject("username")
                 .issuer("parkingrenthub")
                 .issuedAt(new Date(System.currentTimeMillis()))
@@ -48,14 +50,14 @@ public class JWTUtil {
 
         String username = jwt.getClaim("username").asString();
         String role = jwt.getClaim("role").asString();
-
+        UUID id = UUID.fromString(jwt.getClaim("id").asString());
         Map<String, String> claims = new HashMap<>();
         claims.put("username", username);
         claims.put("role", role);
+        claims.put("id", id.toString());
         System.out.println("Decoded username: " + jwt.getClaim("username").asString());
         System.out.println("Decoded role: " + jwt.getClaim("role").asString());
         System.out.println("Проверка токена: username=" + username + ", role=" + role);
-
         return claims;
     }
 

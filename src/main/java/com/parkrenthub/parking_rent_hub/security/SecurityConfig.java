@@ -56,15 +56,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable)  // Отключаем CSRF
+        return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/auth/**", "/auth/reset-password").permitAll()
-                        .requestMatchers("/change-password").authenticated()  // Требуем авторизацию для /protected-endpoint
+                        .requestMatchers("/change-password").authenticated()
                         .requestMatchers(("/admin/**")).hasRole("ADMIN")
-                        .anyRequest().authenticated())  // Для всех остальных запросов — требовать авторизацию
-                .httpBasic(Customizer.withDefaults())  // Стандартная авторизация HTTP
+                        .anyRequest().authenticated())
+                .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // Без сессий
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)  // Добавляем фильтр для JWT
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }

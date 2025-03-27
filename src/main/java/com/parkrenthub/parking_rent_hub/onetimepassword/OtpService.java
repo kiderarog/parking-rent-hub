@@ -37,11 +37,11 @@ public class OtpService {
             OtpEntity otpEntity = optionalOtpEntity.get();
             if (otpEntity.getExpAt().isBefore(LocalDateTime.now())) {
                 otpRepository.delete(otpEntity);
-                return Optional.empty(); // Код истёк, возвращаем пустой Optional
+                return Optional.empty();
             }
-            return Optional.of(otpEntity.getEmail()); // Код ещё действителен
+            return Optional.of(otpEntity.getEmail());
         }
-        return Optional.empty(); // Код не найден
+        return Optional.empty();
     }
 
 

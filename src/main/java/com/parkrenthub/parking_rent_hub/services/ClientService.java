@@ -26,6 +26,7 @@ public class ClientService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // Метод для отдачи личной информации пользователя для отображения его профиля в приложении.
     @Transactional
     public ClientDTO showProfile(String userName) {
         Optional<Client> optionalClient = clientRepository.findByUsername(userName);
@@ -38,12 +39,14 @@ public class ClientService {
                     client.getEmail(),
                     client.getPhone(),
                     client.getCarNumber(),
-                    client.getBalance()
+                    client.getBalance(),
+                    client.getBookedSpotId()
             );
         }
         throw new UsernameNotFoundException("Пользователь не найден.");
     }
 
+    // Метод для изменения личной информации в профиле пользователя.
     @Transactional
     public ResponseDTO editProfile(String clientName, EditProfileDTO editProfileDTO) {
         Optional<Client> optionalClient = clientRepository.findByUsername(clientName);
@@ -69,6 +72,8 @@ public class ClientService {
                 client.getUsername() + " успешно удален.");
     }
 
+    // Метод для смены пароля (если пользователь знает свой пароль).
+    // Проверка на введение актуального пароля НУЖНО ДОБАВИТЬ.
     @Transactional
     public ResponseDTO changePassword(AuthClientDTO authClientDTO) {
         Client client = clientRepository.findByUsername(authClientDTO.getUsername())
